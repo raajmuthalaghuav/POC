@@ -1,0 +1,25 @@
+[REPO]
+REPO1 ansible_host=10.38.182.41
+
+[LIN]
+LIN1 ansible_host=10.38.182.51
+
+[WIN]
+WIN1 ansible_host=10.38.182.41
+
+[REPO:vars]
+ansible_connection=winrm
+ansible_user=administrator
+ansible_password=nutanix/4u
+ansible_winrm_server_cert_validation=ignore
+
+[LIN:vars]
+ansible_connection=ssh
+ansible_user=root
+ansible_ssh_pass=nutanix/4u
+
+[WIN:vars]
+ansible_connection=winrm
+ansible_user=administrator
+ansible_password=nutanix/4u
+ansible_winrm_server_cert_validation=ignore
