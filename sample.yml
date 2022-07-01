@@ -1,9 +1,9 @@
 ---
- - hosts: all
+ - hosts: all 
    tasks:
      - name: Fetch the file from the linux to control node
        run_once: yes
-       fetch: src=/tmp/templin.txt dest=/root/playbook/templin.txt flat=yes
+       fetch: src=/tmp/templin.txt dest=/root/playbook/templin.txt flat=yes 
        when: "'{{ inventory_hostname }}' == '10.55.45.105'"
 
      - name: Fetch the file from the windows to control node

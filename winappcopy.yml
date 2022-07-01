@@ -1,0 +1,19 @@
+---
+- name: set Application name
+  set_fact:
+    appname: "{{ item.value['name'] }}"
+
+- name: get file stat to be able to perform a check in the following task
+  local_action: stat path="/root/playbook/INI/{{ item.value['name'] }}"
+  register: file
+
+- name: Copy application file to respective directory in remote host
+  copy: src="/root/playbook/INI/{{ item.value['name'] }}" dest="{{ item.value['path'] }}\{{ item.value['name'] }}"
+  when: file.stat.exists
+
+- name: Restart service
+  ansible.builtin.service:
+    name: "{{ item.value['service'] }}"
+    state: restarted
+  when: file.stat.exists
+

@@ -22,21 +22,21 @@
 
      - block:  # Application 1
          - name: set Application name
-           set_fact:
+           set_fact: 
              appname: 'test1.ini'
 
          - name: get file stat to be able to perform a check in the following task
            local_action: stat path=/root/playbook/INI/{{ appname }}
            register: file
 
-         - name: Copy application file to respective directory in remote host
-           copy: src=/root/playbook/INI/{{ appname }} dest=/tmp/{{ appname }}
+         - name: Copy application file to respective directory in remote host 
+           copy: src=/root/playbook/INI/{{ appname }} dest=/tmp/{{ appname }} 
            when: file.stat.exists
 
          - name: Restart service
            ansible.builtin.service:
              name: crond
-             state: restarted
+             state: restarted 
            when: file.stat.exists
        tags: lincopy
 
@@ -59,9 +59,9 @@
 
          - name: Restart service
            ansible.windows.win_service:
-             name: schedule
+             name: schedule 
              state: restarted
-           ignore_errors: yes
+           ignore_errors: yes 
            when: file.stat.exists
        tags: wincopy
 
@@ -79,3 +79,4 @@
          path: "{{ item.path }}"
          state: absent
        with_items: "{{ files_to_delete.files }}"
+

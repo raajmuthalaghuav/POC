@@ -1,0 +1,68 @@
+---
+ - hosts: REPO1
+   gather_facts: no
+   tasks:
+     - name: Fetch files from REPO to control node
+       ansible.windows.win_find:
+         paths: C:\temp
+         patterns: [ '*.ini' ]
+       register: files_matched
+       tags: copy
+
+     - name: Fetch files from REPO to control node
+       run_once: yes
+       fetch: src=C:\\temp\\{{ item.filename }} dest=/root/playbook/INI/{{ item.filename }} flat=yes
+       with_items:
+         - '{{ files_matched.files }}'
+       tags: copy
+
+ - hosts: LIN
+   gather_facts: no
+   vars:
+     linapps:
+       test1:
+         name: "test1.ini"
+         path: "/tmp"
+         service: "crond"
+       test2:
+         name: "test2.ini"
+         path: "/tmp"
+         service: "crond"
+   tasks:
+   -  name: copy into linux hosts
+      include_tasks: linappcopy.yml
+#      debug:
+#        msg: "name is {{ item.value['name'] }}"
+      with_dict: '{{ linapps }}'
+      tags: lincopy
+
+ - hosts: WIN
+   gather_facts: no
+   vars:
+     winapps:
+       test3:
+         name: "test3.ini"
+         path: "C:\Program Files\Nutanix"
+         service: "wpnclient"
+   tasks:
+   -  name: copy into windows hosts
+      include_tasks: winappcopy.yml
+      with_dict: '{{ winapps }}'
+      tags: wincopy
+
+ - hosts: localhost
+   gather_facts: no
+   tasks:
+     - name: find ini files glob
+       find:
+         paths: /root/playbook/INI
+         patterns: "*.ini"
+       register: files_to_delete
+       tags: cleanup
+
+     - name: clenaup ini file in control node
+       file:
+         path: "{{ item.path }}"
+         state: absent
+       with_items: "{{ files_to_delete.files }}"
+       tags: cleanup

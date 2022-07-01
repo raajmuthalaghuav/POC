@@ -1,0 +1,11 @@
+- hosts: localhost
+  tasks:
+    - name: emailing report
+      mail:
+        host: smtp.gmail.com
+        port: 587
+        username: raaj@citiuscloud.com
+        password: ********* 
+        to: Raaj <raaj@citiuscloud.com>
+        subject: Ansible-report
+        body: 'System {{ ansible_hostname }} has been successfully provisioned.'
